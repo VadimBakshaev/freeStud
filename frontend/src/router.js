@@ -7,6 +7,11 @@ export class Router {
         this.titlePageEl = document.getElementById('title');
         this.contentPageEl = document.getElementById('content');
         this.adminlteStyleEl = document.getElementById('adminlte_style');
+        this.openNewRoute = async (url) => {
+            const currentRoute = location.pathname;
+            history.pushState({}, '', url);
+            await this.activateRoute(null, currentRoute);
+        };
         this.initEvents();
         this.routes = [
             {
@@ -14,7 +19,7 @@ export class Router {
                 title: 'Дашборд',
                 filePathTemplate: '/templates/dashboard.html',
                 useLayout: '/templates/layout.html',
-                load() {
+                load: () => {
                     new Dashboard();
                 }
             },
@@ -23,7 +28,7 @@ export class Router {
                 title: 'Страница не найдена',
                 filePathTemplate: '/templates/404.html',
                 useLayout: false,
-                load() {
+                load: () => {
 
                 }
             },
@@ -32,12 +37,12 @@ export class Router {
                 title: 'Авторизация',
                 filePathTemplate: '/templates/login.html',
                 useLayout: false,
-                load() {
+                load: () => {
                     document.body.classList.add('login-page');
                     document.body.style.height = '100vh';
-                    new Login();
+                    new Login(this.openNewRoute);
                 },
-                unload(){
+                unload() {
                     document.body.classList.remove('login-page');
                     document.body.style.height = 'auto';
                 },
@@ -48,12 +53,12 @@ export class Router {
                 title: 'Регистрация',
                 filePathTemplate: '/templates/sign-up.html',
                 useLayout: false,
-                load() {
+                load: () => {
                     document.body.classList.add('register-page');
                     document.body.style.height = '100vh';
-                    new SignUp();
+                    new SignUp(this.openNewRoute);
                 },
-                unload(){
+                unload() {
                     document.body.classList.remove('register-page');
                     document.body.style.height = 'auto';
                 },
@@ -61,12 +66,14 @@ export class Router {
             },
         ];
     };
+
     initEvents() {
         window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this));
         window.addEventListener('popstate', this.activateRoute.bind(this));
-        document.addEventListener('click', this.openNewRoute.bind(this));
+        document.addEventListener('click', this.clickHandler.bind(this));
     };
-    openNewRoute(e) {
+
+    async clickHandler(e) {
         let element = null;
         if (e.target.nodeName === 'A') {
             element = e.target;
@@ -79,13 +86,11 @@ export class Router {
             if (!url || url === '/#' || url.startsWith('javascript:void(0)')) {
                 return;
             };
-            const currentRoute = location.pathname;
-            history.pushState({}, '', url);
-            this.activateRoute(null, currentRoute);
+            await this.openNewRoute(url);
         };
     };
     async activateRoute(e, oldRoute = null) {
-        if(oldRoute){
+        if (oldRoute) {
             const currentRoute = this.routes.find(item => item.route === oldRoute);
             if (currentRoute.styles && currentRoute.styles.length > 0) {
                 currentRoute.styles.forEach(style => {
@@ -113,17 +118,11 @@ export class Router {
             if (newRoute.filePathTemplate) {
                 if (newRoute.useLayout) {
                     await this.#constructTemplate(this.contentPageEl, newRoute.useLayout);
-                    // this.contentPageEl.innerHTML = await fetch(newRoute.useLayout)
-                    //     .then(response => response.text());
                     await this.#constructTemplate(document.querySelector('.content-wrapper'), newRoute.filePathTemplate);
-                    // document.querySelector('.content-wrapper').innerHTML = await fetch(newRoute.filePathTemplate)
-                    //     .then(response => response.text());
                     document.body.classList.add('sidebar-mini', 'layout-fixed');
                 } else {
                     await this.#constructTemplate(this.contentPageEl, newRoute.filePathTemplate);
                     document.body.classList.remove('sidebar-mini', 'layout-fixed');
-                    // this.contentPageEl.innerHTML = await fetch(newRoute.filePathTemplate)
-                    //     .then(response => response.text());
                 };
             };
             if (newRoute.load && typeof newRoute.load === 'function') {
@@ -132,7 +131,7 @@ export class Router {
         } else {
             console.log('No route found');
             history.pushState({}, '', '/404');
-            this.activateRoute();
+            await this.activateRoute();
         };
     };
     async #constructTemplate(templateElement, newRoute) {
