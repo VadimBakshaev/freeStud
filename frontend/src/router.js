@@ -1,5 +1,7 @@
 import { Dashboard } from "./components/dashboard";
+import { FreelancersList } from "./components/freelancers/freelancers-list";
 import { Login } from "./components/login";
+import { Logout } from "./components/logout";
 import { SignUp } from "./components/sign-up";
 
 export class Router {
@@ -17,7 +19,7 @@ export class Router {
             {
                 route: '/',
                 title: 'Дашборд',
-                filePathTemplate: '/templates/dashboard.html',
+                filePathTemplate: '/templates/pages/dashboard.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
                     new Dashboard();
@@ -26,7 +28,7 @@ export class Router {
             {
                 route: '/404',
                 title: 'Страница не найдена',
-                filePathTemplate: '/templates/404.html',
+                filePathTemplate: '/templates/pages/404.html',
                 useLayout: false,
                 load: () => {
 
@@ -35,7 +37,7 @@ export class Router {
             {
                 route: '/login',
                 title: 'Авторизация',
-                filePathTemplate: '/templates/login.html',
+                filePathTemplate: '/templates/pages/auth/login.html',
                 useLayout: false,
                 load: () => {
                     document.body.classList.add('login-page');
@@ -51,7 +53,7 @@ export class Router {
             {
                 route: '/sign-up',
                 title: 'Регистрация',
-                filePathTemplate: '/templates/sign-up.html',
+                filePathTemplate: '/templates/pages/auth/sign-up.html',
                 useLayout: false,
                 load: () => {
                     document.body.classList.add('register-page');
@@ -64,6 +66,21 @@ export class Router {
                 },
                 styles: ['icheck-bootstrap.min.css']
             },
+            {
+                route:'/logout',
+                load:()=>{
+                    new Logout(this.openNewRoute);
+                }
+            },
+            {
+                route: '/freelancers',
+                title: 'Фрилансеры',
+                filePathTemplate: '/templates/pages/freelancers/list.html',
+                useLayout: '/templates/layout.html',
+                load: () => {
+                    new FreelancersList(this.openNewRoute);
+                }
+            }
         ];
     };
 
