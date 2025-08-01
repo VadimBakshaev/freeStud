@@ -1,3 +1,6 @@
+// @import 'freelancers';
+@use "freelancers.scss" as *;
+
 .sidebar{
     .image{
         i.fa{

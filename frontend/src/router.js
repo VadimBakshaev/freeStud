@@ -3,6 +3,7 @@ import { FreelancersList } from "./components/freelancers/freelancers-list";
 import { Login } from "./components/login";
 import { Logout } from "./components/logout";
 import { SignUp } from "./components/sign-up";
+import { FileUtils } from "./utils/file-utils";
 
 export class Router {
     constructor() {
@@ -67,8 +68,8 @@ export class Router {
                 styles: ['icheck-bootstrap.min.css']
             },
             {
-                route:'/logout',
-                load:()=>{
+                route: '/logout',
+                load: () => {
                     new Logout(this.openNewRoute);
                 }
             },
@@ -79,7 +80,12 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: () => {
                     new FreelancersList(this.openNewRoute);
-                }
+                },
+                styles: ['dataTables.bootstrap4.min.css'],
+                scripts: [
+                    'jquery.dataTables.min.js',
+                    'dataTables.bootstrap4.min.js'
+                ]
             }
         ];
     };
@@ -100,7 +106,11 @@ export class Router {
         if (element) {
             e.preventDefault();
             const url = element.href.replace(location.origin, '');
-            if (!url || url === '/#' || url.startsWith('javascript:void(0)')) {
+            if (
+                !url
+                || url.replace('#','') === location.pathname
+                || url.startsWith('javascript:void(0)')
+            ) {
                 return;
             };
             await this.openNewRoute(url);
@@ -114,6 +124,11 @@ export class Router {
                     document.querySelector(`link[href='/css/${style}']`).remove();
                 });
             };
+            if (currentRoute.scripts && currentRoute.scripts.length > 0) {
+                currentRoute.scripts.forEach(script => {
+                    document.querySelector(`script[src='/js/${script}']`).remove();
+                });
+            };
             if (currentRoute.unload && typeof currentRoute.unload === 'function') {
                 currentRoute.unload();
             };
@@ -122,12 +137,13 @@ export class Router {
         if (newRoute) {
             if (newRoute.styles && newRoute.styles.length > 0) {
                 newRoute.styles.forEach(style => {
-                    const linkEl = document.createElement('link');
-                    linkEl.rel = 'stylesheet';
-                    linkEl.href = '/css/' + style;
-                    this.adminlteStyleEl
-                    document.head.insertBefore(linkEl, this.adminlteStyleEl);
+                    FileUtils.loadPageStyle('/css/' + style, this.adminlteStyleEl);
                 });
+            };
+            if (newRoute.scripts && newRoute.scripts.length > 0) {
+                for (const script of newRoute.scripts) {
+                    await FileUtils.loadPageScript('/js/' + script);
+                };
             };
             if (newRoute.title) {
                 this.titlePageEl.innerText = newRoute.title + ' | Freelance Studio';
