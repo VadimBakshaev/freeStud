@@ -1,5 +1,6 @@
 import { Dashboard } from "./components/dashboard";
 import { FreelancersList } from "./components/freelancers/freelancers-list";
+import { FreelancersView } from "./components/freelancers/freelancers-view";
 import { Login } from "./components/login";
 import { Logout } from "./components/logout";
 import { SignUp } from "./components/sign-up";
@@ -86,6 +87,15 @@ export class Router {
                     'jquery.dataTables.min.js',
                     'dataTables.bootstrap4.min.js'
                 ]
+            },
+            {
+                route: '/freelancers/view',
+                title: 'Фрилансер',
+                filePathTemplate: '/templates/pages/freelancers/view.html',
+                useLayout: '/templates/layout.html',
+                load: () => {
+                    new FreelancersView(this.openNewRoute);
+                }
             }
         ];
     };

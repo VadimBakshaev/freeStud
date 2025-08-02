@@ -1,4 +1,5 @@
 import config from "../../config/config";
+import { CommonUtils } from "../../utils/common-utils";
 import { HttpUtils } from "../../utils/http-utils";
 
 export class FreelancersList {
@@ -29,21 +30,8 @@ export class FreelancersList {
                 : '';
             trEl.insertCell().innerText = freelancers[i].name + ' ' + freelancers[i].lastName;
             trEl.insertCell().innerText = freelancers[i].email;
-            let levelHtml = null;
-            switch (freelancers[i].level) {
-                case config.freelancerLevels.junior:
-                    levelHtml = `<span class="badge badge-info">Junior</span>`;
-                    break;
-                case config.freelancerLevels.middle:
-                    levelHtml = `<span class="badge badge-warning">Middle</span>`;
-                    break;
-                case config.freelancerLevels.senior:
-                    levelHtml = `<span class="badge badge-success">Senior</span>`;
-                    break;
-                default:
-                    levelHtml = `<span class="badge badge-secondary">Unknown</span>`;
-            };
-            trEl.insertCell().innerHTML = levelHtml;
+            
+            trEl.insertCell().innerHTML = CommonUtils.getLevelHtml(freelancers[i].level);
             trEl.insertCell().innerText = freelancers[i].education;
             trEl.insertCell().innerText = freelancers[i].location;
             trEl.insertCell().innerText = freelancers[i].skills;
