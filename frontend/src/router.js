@@ -1,4 +1,5 @@
 import { Dashboard } from "./components/dashboard";
+import { FreelancersCreate } from "./components/freelancers/freelancers-create";
 import { FreelancersList } from "./components/freelancers/freelancers-list";
 import { FreelancersView } from "./components/freelancers/freelancers-view";
 import { Login } from "./components/login";
@@ -96,6 +97,18 @@ export class Router {
                 load: () => {
                     new FreelancersView(this.openNewRoute);
                 }
+            },
+            {
+                route: '/freelancers/create',
+                title: 'Новый фрилансер',
+                filePathTemplate: '/templates/pages/freelancers/create.html',
+                useLayout: '/templates/layout.html',
+                load: () => {
+                    new FreelancersCreate(this.openNewRoute);
+                },
+                scripts: [
+                    'bs-custom-file-input.min.js'                    
+                ]
             }
         ];
     };

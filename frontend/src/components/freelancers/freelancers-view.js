@@ -24,7 +24,7 @@ export class FreelancersView {
         ) {
             return console.log(result.response.message);
         };
-        console.log(result.response);
+        
         this.showFreelancer(result.response)
     };
     showFreelancer(freelancer) {
