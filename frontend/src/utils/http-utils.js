@@ -2,7 +2,7 @@ import config from "../config/config";
 import { AuthUtils } from "./auth-utils";
 
 export class HttpUtils {
-    static async request(url, method = 'GET', body = null) {
+    static async request(url, method = 'GET', auth = true, body = null) {
         const result = {
             error: false,
             response: null
@@ -16,7 +16,7 @@ export class HttpUtils {
             }
         };
         let token = null;
-        if (method === 'GET') {
+        if (method === 'GET' || auth) {
             token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey);
             if (token) {
                 params.headers['authorization'] = token;

@@ -60,12 +60,12 @@ export class SignUp {
     async signUp() {
         this.commonErrorEl.style.display = 'none';
         if (this.validateForm()) {
-            const result = await HttpUtils.request('/signup', 'POST', {
-                    name: this.nameEl.value,
-                    lastName: this.lastNameEl.value,
-                    email: this.emailEl.value,
-                    password: this.passwordEl.value
-                });
+            const result = await HttpUtils.request('/signup', 'POST', false, {
+                name: this.nameEl.value,
+                lastName: this.lastNameEl.value,
+                email: this.emailEl.value,
+                password: this.passwordEl.value
+            });
             if (result.error
                 || !result.response
                 || result.response.error
@@ -79,7 +79,7 @@ export class SignUp {
             AuthUtils.setAuthInfo(result.response.accessToken, result.response.refreshToken, {
                 id: result.response.id,
                 name: result.response.name
-            });            
+            });
             this.openNewRoute('/');
         };
     };

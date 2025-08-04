@@ -32,7 +32,7 @@ export class Login {
     async login() {
         this.commonErrorEl.style.display = 'none';
         if (this.validateForm()) {
-            const result = await HttpUtils.request('/login', 'POST', {
+            const result = await HttpUtils.request('/login', 'POST',false, {
                 email: this.emailEl.value,
                 password: this.passwordEl.value,
                 rememberMe: this.checkEl.checked

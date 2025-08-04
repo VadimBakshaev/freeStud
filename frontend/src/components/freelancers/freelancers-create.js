@@ -15,7 +15,7 @@ export class FreelancersCreate {
         this.avatarEl = document.getElementById('avatarInput');
         document.getElementById('saveButton').addEventListener('click', this.saveFreelancer.bind(this));
         bsCustomFileInput.init();
-    };
+    };    
     validateForm() {
         let isValid = true;
         const textInputEl = [this.nameEl, this.lastNameEl, this.educationEl, this.locationEl, this.skillsEl, this.infoEl];
@@ -51,7 +51,7 @@ export class FreelancersCreate {
             if (this.avatarEl.files && this.avatarEl.files.length > 0) { 
                 data.avatarBase64 = await FileUtils.convertFileToBase64(this.avatarEl.files[0]);
             };
-            const result = await HttpUtils.request('/freelancers', 'POST', data);
+            const result = await HttpUtils.request('/freelancers', 'POST',true, data);
             if (result.redirect) {
                 return this.openNewRoute(result.redirect);
             };

@@ -1,9 +1,12 @@
 import { Dashboard } from "./components/dashboard";
 import { FreelancersCreate } from "./components/freelancers/freelancers-create";
+import { FreelancersDelete } from "./components/freelancers/freelancers-delete";
+import { FreelancersEdit } from "./components/freelancers/freelancers-edit";
 import { FreelancersList } from "./components/freelancers/freelancers-list";
 import { FreelancersView } from "./components/freelancers/freelancers-view";
 import { Login } from "./components/login";
 import { Logout } from "./components/logout";
+import { OrdersList } from "./components/orders/orders-list";
 import { SignUp } from "./components/sign-up";
 import { FileUtils } from "./utils/file-utils";
 
@@ -108,6 +111,38 @@ export class Router {
                 },
                 scripts: [
                     'bs-custom-file-input.min.js'                    
+                ]
+            },
+            {
+                route: '/freelancers/edit',
+                title: 'Редактирование фрилансера',
+                filePathTemplate: '/templates/pages/freelancers/edit.html',
+                useLayout: '/templates/layout.html',
+                load: () => {
+                    new FreelancersEdit(this.openNewRoute);
+                },
+                scripts: [
+                    'bs-custom-file-input.min.js'                    
+                ]
+            },
+            {
+                route: '/freelancers/delete',
+                load: () => {
+                    new FreelancersDelete(this.openNewRoute);
+                }
+            },
+            {
+                route: '/orders',
+                title: 'Заказы',
+                filePathTemplate: '/templates/pages/orders/list.html',
+                useLayout: '/templates/layout.html',
+                load: () => {
+                    new OrdersList(this.openNewRoute);
+                },
+                styles: ['dataTables.bootstrap4.min.css'],
+                scripts: [
+                    'jquery.dataTables.min.js',
+                    'dataTables.bootstrap4.min.js'
                 ]
             }
         ];
