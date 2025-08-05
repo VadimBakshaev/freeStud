@@ -21,6 +21,7 @@ export class OrdersList {
         this.showRecords(result.response.orders);
     };
     showRecords(orders) {
+        console.log(orders);
         for (let i = 0; i < orders.length; i++) {
             const trEl = document.createElement('tr');
             trEl.insertCell().innerText = orders[i].number;
@@ -28,8 +29,9 @@ export class OrdersList {
             trEl.insertCell().innerHTML = `<a href="/freelancers/view?id=${orders[i].freelancer.id}">${orders[i].freelancer.name} ${orders[i].freelancer.lastName}</a>`;
             trEl.insertCell().innerText = (new Date(orders[i].scheduledDate)).toLocaleString('ru-RU');
             trEl.insertCell().innerText = (new Date(orders[i].deadlineDate)).toLocaleString('ru-RU');            
-            trEl.insertCell().innerHTML = CommonUtils.getStatusInfo(orders[i].status);
-            trEl.insertCell().innerText = (new Date(orders[i].completeDate)).toLocaleString('ru-RU'); 
+            const statusInfo = CommonUtils.getStatusInfo(orders[i].status);
+            trEl.insertCell().innerHTML = `<span class="badge badge-${statusInfo.color}">${statusInfo.name}</span>`;
+            trEl.insertCell().innerText = orders[i].completeDate ? (new Date(orders[i].completeDate)).toLocaleString('ru-RU') : ''; 
 
            trEl.insertCell().innerHTML = `<div class='order-tools'>
             <a href='/orders/view?id=${orders[i].id}' class='fas fa-eye'></a>

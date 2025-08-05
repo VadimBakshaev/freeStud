@@ -7,6 +7,7 @@ import { FreelancersView } from "./components/freelancers/freelancers-view";
 import { Login } from "./components/login";
 import { Logout } from "./components/logout";
 import { OrdersList } from "./components/orders/orders-list";
+import { OrdersView } from "./components/orders/orders-view";
 import { SignUp } from "./components/sign-up";
 import { FileUtils } from "./utils/file-utils";
 
@@ -144,6 +145,15 @@ export class Router {
                     'jquery.dataTables.min.js',
                     'dataTables.bootstrap4.min.js'
                 ]
+            },
+            {
+                route: '/orders/view',
+                title: 'Заказ',
+                filePathTemplate: '/templates/pages/orders/view.html',
+                useLayout: '/templates/layout.html',
+                load: () => {
+                    new OrdersView(this.openNewRoute);
+                }
             }
         ];
     };
