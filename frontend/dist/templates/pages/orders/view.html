@@ -20,29 +20,67 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="card card-primary card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">Исполнитель</h3>
+                        <div class="card-body box-profile">
+                            <div class="info-box mb-0" id="order-status">
+                                <span class="info-box-icon"><i class="fas" id="order-status-icon"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Статус</span>
+                                    <span class="info-box-number" id="order-status-value">ПОДТВЕРЖДЕН</span>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="card card-primary card-outline">
+                        <div class="card-header text-center">Исполнитель</div>
                         <div class="card-body box-profile">
                             <div class="text-center">
                                 <img class="profile-user-img img-fluid img-circle" id="freelancer-avatar" src=""
                                     alt="User profile picture">
                             </div>
                             <h3 class="profile-username text-center" id="freelancer-name"></h3>
-                            </div>
+                        </div>
                     </div>
                     <a href="/orders/edit?id=" class="btn btn-warning w-100" id="edit-link">Редактировать</a>
                     <a href="/orders/delete?id=" class="btn btn-danger w-100 mt-2" id="delete-link">Удалить</a>
                 </div>
                 <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-info"><i class="far fa-calendar"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">План выполнения</span>
+                                    <span class="info-box-number" id="scheduled"></span>
+                                </div>                               
+                            </div>                            
+                        </div>                        
+                        <div class="col-md-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-success"><i class="far fa-calendar"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Дата выполнения</span>
+                                    <span class="info-box-number" id="complete"></span>
+                                </div>                               
+                            </div>                            
+                        </div>                        
+                        <div class="col-md-4">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-warning"><i class="far fa-calendar"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Дедлайн</span>
+                                    <span class="info-box-number" id="deadline"></span>
+                                </div>                               
+                            </div>                            
+                        </div>                        
+                    </div>
                     <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title">Подробности заказа № <strong id="number"></strong></h3>
                         </div>
-                        
+
                         <div class="card-body">
                             <strong><i class="fas fa-list mr-1"></i> Описание</strong>
-                            <p class="text-muted" id="description">                                
+                            <p class="text-muted" id="description">
                             </p>
                             <hr>
 
@@ -55,9 +93,9 @@
                             <hr>
 
                             <strong><i class="fas fa-clock mr-1"></i> Добавлен на платформу</strong>
-                            <p class="text-muted" id="created">                                
+                            <p class="text-muted" id="created">
                             </p>
-                            
+
                         </div>
 
                     </div>
