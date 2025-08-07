@@ -7,6 +7,8 @@ import { FreelancersView } from "./components/freelancers/freelancers-view";
 import { Login } from "./components/login";
 import { Logout } from "./components/logout";
 import { OrdersCreate } from "./components/orders/orders-create";
+import { OrdersDelete } from "./components/orders/orders-delete";
+import { OrdersEdit } from "./components/orders/orders-edit";
 import { OrdersList } from "./components/orders/orders-list";
 import { OrdersView } from "./components/orders/orders-view";
 import { SignUp } from "./components/sign-up";
@@ -112,7 +114,7 @@ export class Router {
                     new FreelancersCreate(this.openNewRoute);
                 },
                 scripts: [
-                    'bs-custom-file-input.min.js'                    
+                    'bs-custom-file-input.min.js'
                 ]
             },
             {
@@ -124,7 +126,7 @@ export class Router {
                     new FreelancersEdit(this.openNewRoute);
                 },
                 scripts: [
-                    'bs-custom-file-input.min.js'                    
+                    'bs-custom-file-input.min.js'
                 ]
             },
             {
@@ -173,8 +175,34 @@ export class Router {
                     'moment.min.js',
                     'moment-ru.js',
                     'tempusdominus-bootstrap-4.min.js',
-                    'select2.full.min.js'                  
+                    'select2.full.min.js'
                 ]
+            },
+            {
+                route: '/orders/edit',
+                title: 'Редактирование заказаа',
+                filePathTemplate: '/templates/pages/orders/edit.html',
+                useLayout: '/templates/layout.html',
+                load: () => {
+                    new OrdersEdit(this.openNewRoute);
+                },
+                styles: [
+                    'tempusdominus-bootstrap-4.min.css',
+                    'select2.min.css',
+                    'select2-bootstrap4.min.css'
+                ],
+                scripts: [
+                    'moment.min.js',
+                    'moment-ru.js',
+                    'tempusdominus-bootstrap-4.min.js',
+                    'select2.full.min.js'
+                ]
+            },
+            {
+                route: '/orders/delete',
+                load: () => {
+                    new OrdersDelete(this.openNewRoute);
+                }
             }
         ];
     };
@@ -197,7 +225,7 @@ export class Router {
             const url = element.href.replace(location.origin, '');
             if (
                 !url
-                || url.replace('#','') === location.pathname
+                || url.replace('#', '') === location.pathname
                 || url.startsWith('javascript:void(0)')
             ) {
                 return;
