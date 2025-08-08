@@ -20,8 +20,7 @@ export class OrdersList {
         };
         this.showRecords(result.response.orders);
     };
-    showRecords(orders) {
-        console.log(orders);
+    showRecords(orders) {        
         for (let i = 0; i < orders.length; i++) {
             const trEl = document.createElement('tr');
             trEl.insertCell().innerText = orders[i].number;

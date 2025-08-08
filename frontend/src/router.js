@@ -32,8 +32,14 @@ export class Router {
                 filePathTemplate: '/templates/pages/dashboard.html',
                 useLayout: '/templates/layout.html',
                 load: () => {
-                    new Dashboard();
-                }
+                    new Dashboard(this.openNewRoute);
+                },
+                styles: ['fullcalendar.main.min.css'],
+                scripts: [
+                    'moment.min.js',
+                    'fullcalendar.main.min.js',
+                    'fullcalendar-ru.js'
+                ]
             },
             {
                 route: '/404',
@@ -270,6 +276,7 @@ export class Router {
                     await this.#constructTemplate(this.contentPageEl, newRoute.useLayout);
                     await this.#constructTemplate(document.querySelector('.content-wrapper'), newRoute.filePathTemplate);
                     document.body.classList.add('sidebar-mini', 'layout-fixed');
+                    this.activateMenuItem(newRoute);
                 } else {
                     await this.#constructTemplate(this.contentPageEl, newRoute.filePathTemplate);
                     document.body.classList.remove('sidebar-mini', 'layout-fixed');
@@ -287,5 +294,13 @@ export class Router {
     async #constructTemplate(templateElement, newRoute) {
         templateElement.innerHTML = await fetch(newRoute)
             .then(response => response.text());
+    };
+    activateMenuItem(route) {
+        document.querySelectorAll('.sidebar .nav-link').forEach(item => {
+            item.classList.remove('active');
+            if ((route.route.includes(item.getAttribute('href')) && item.getAttribute('href') !== '/') || (route.route === '/' && item.getAttribute('href') === '/')) {
+                item.classList.add('active');
+            };
+        });
     };
 }
