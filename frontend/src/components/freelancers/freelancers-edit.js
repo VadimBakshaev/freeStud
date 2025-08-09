@@ -2,6 +2,7 @@ import config from "../../config/config";
 import { CommonUtils } from "../../utils/common-utils";
 import { FileUtils } from "../../utils/file-utils";
 import { HttpUtils } from "../../utils/http-utils";
+import { ValidationUtils } from "../../utils/validation-utils";
 
 export class FreelancersEdit {
     constructor(openNewRoute) {
@@ -62,19 +63,9 @@ export class FreelancersEdit {
         let isValid = true;
         const textInputEl = [this.nameEl, this.lastNameEl, this.educationEl, this.locationEl, this.skillsEl, this.infoEl];
         for (let i = 0; i < textInputEl.length; i++) {
-            if (textInputEl[i].value) {
-                textInputEl[i].classList.remove('is-invalid');
-            } else {
-                textInputEl[i].classList.add('is-invalid');
-                isValid = false;
-            };
+            if (!ValidationUtils.validateField(textInputEl[i])) isValid = false;            
         };
-        if (this.emailEl.value && this.emailEl.value.match(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-            this.emailEl.classList.remove('is-invalid');
-        } else {
-            this.emailEl.classList.add('is-invalid');
-            isValid = false;
-        };
+        if (!ValidationUtils.validateField(this.emailEl, {pattern:/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/})) isValid = false; 
         return isValid;
     };
     async updateFreelancer(e) {
