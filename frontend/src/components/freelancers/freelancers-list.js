@@ -1,4 +1,5 @@
 import config from "../../config/config";
+import { FreelancersService } from "../../services/freelancers-service";
 import { CommonUtils } from "../../utils/common-utils";
 import { HttpUtils } from "../../utils/http-utils";
 
@@ -6,7 +7,9 @@ export class FreelancersList {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
         this.recordsEl = document.getElementById('records');
-        this.getFreelancers();
+
+        this.showRecords();
+        //this.getFreelancers();
     };
     async getFreelancers() {
         const result = await HttpUtils.request('/freelancers');
@@ -21,7 +24,10 @@ export class FreelancersList {
         };
         this.showRecords(result.response.freelancers)
     };
-    showRecords(freelancers) {
+    async showRecords() {
+        const freelancers = await FreelancersService.getFreelancers();
+        if (!freelancers) return null;
+        if (typeof (freelancers) === 'string') return this.openNewRoute(freelancers);
         for (let i = 0; i < freelancers.length; i++) {
             const trEl = document.createElement('tr');
             trEl.insertCell().innerText = i + 1;
@@ -30,16 +36,11 @@ export class FreelancersList {
                 : '';
             trEl.insertCell().innerText = freelancers[i].name + ' ' + freelancers[i].lastName;
             trEl.insertCell().innerText = freelancers[i].email;
-            
             trEl.insertCell().innerHTML = CommonUtils.getLevelHtml(freelancers[i].level);
             trEl.insertCell().innerText = freelancers[i].education;
             trEl.insertCell().innerText = freelancers[i].location;
             trEl.insertCell().innerText = freelancers[i].skills;
-            trEl.insertCell().innerHTML = `<div class='freelancer-tools'>
-            <a href='/freelancers/view?id=${freelancers[i].id}' class='fas fa-eye'></a>
-            <a href='/freelancers/edit?id=${freelancers[i].id}' class='fas fa-edit'></a>
-            <a href='/freelancers/delete?id=${freelancers[i].id}' class='fas fa-trash'></a>
-            </div>`;
+            trEl.insertCell().innerHTML = CommonUtils.generateGridToolsColumn('freelancers', freelancers[i].id);
             this.recordsEl.appendChild(trEl);
         };
 
@@ -48,11 +49,11 @@ export class FreelancersList {
                 "lengthMenu": "Показывать _MENU_ записей на странице",
                 "search": "Фильтр:",
                 "info": "Страница _PAGE_ из _PAGES_",
-                "paginate": {                    
+                "paginate": {
                     "next": "Вперед",
                     "previous": "Назад"
                 },
             }
-        });        
+        });
     };
 }

@@ -1,5 +1,6 @@
 import { AuthUtils } from "../utils/auth-utils";
 import { HttpUtils } from "../utils/http-utils";
+import { ValidationUtils } from "../utils/validation-utils";
 
 export class SignUp {
     constructor(openNewRoute) {
@@ -16,50 +17,16 @@ export class SignUp {
         this.commonErrorEl = document.getElementById('common-error');
         document.getElementById('process-button').addEventListener('click', this.signUp.bind(this));
     };
-    validateForm() {
-        let isValid = true;
-        if (this.nameEl.value) {
-            this.nameEl.classList.remove('is-invalid');
-        } else {
-            this.nameEl.classList.add('is-invalid');
-            isValid = false;
-        };
-        if (this.lastNameEl.value) {
-            this.lastNameEl.classList.remove('is-invalid');
-        } else {
-            this.lastNameEl.classList.add('is-invalid');
-            isValid = false;
-        };
-        if (this.emailEl.value && this.emailEl.value.match(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-            this.emailEl.classList.remove('is-invalid');
-        } else {
-            this.emailEl.classList.add('is-invalid');
-            isValid = false;
-        };
-        if (this.passwordEl.value && this.passwordEl.value.match(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/)) {
-            this.passwordEl.classList.remove('is-invalid');
-        } else {
-            this.passwordEl.classList.add('is-invalid');
-            isValid = false;
-        };
-        if (this.passwordRepeatEl.value === this.passwordEl.value) {
-            this.passwordRepeatEl.classList.remove('is-invalid');
-        } else {
-            this.passwordRepeatEl.classList.add('is-invalid');
-            isValid = false;
-        };
-        if (this.checkEl.checked) {
-            this.checkEl.classList.remove('is-invalid');
-        } else {
-            this.checkEl.classList.add('is-invalid');
-            isValid = false;
-        };
-
-        return isValid;
-    };
     async signUp() {
         this.commonErrorEl.style.display = 'none';
-        if (this.validateForm()) {
+        if (ValidationUtils.validateForm([
+            { element: this.nameEl },
+            { element: this.lastNameEl },
+            { element: this.emailEl, options: { pattern: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ } },
+            { element: this.passwordEl, options: { pattern: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,}$/ } },
+            { element: this.passwordRepeatEl, options: { compare: this.passwordEl } },
+            { element: this.checkEl, options: { check: this.checkEl.checked } }
+        ])) {
             const result = await HttpUtils.request('/signup', 'POST', false, {
                 name: this.nameEl.value,
                 lastName: this.lastNameEl.value,

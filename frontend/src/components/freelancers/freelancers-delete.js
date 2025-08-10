@@ -1,12 +1,11 @@
 import { HttpUtils } from "../../utils/http-utils";
+import { UrlUtils } from "../../utils/url-utils";
 
 export class FreelancersDelete {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
-        const id = new URLSearchParams(location.search).get('id');
-        if (!id) {
-            return openNewRoute('/');
-        };
+        const id = UrlUtils.getUrlParam('id');
+        if (!id) return openNewRoute('/');        
         this.deleteFreelancer(id);
     };
     async deleteFreelancer(id) {

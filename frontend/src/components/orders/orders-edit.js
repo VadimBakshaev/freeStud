@@ -1,9 +1,11 @@
 import { HttpUtils } from "../../utils/http-utils";
+import { UrlUtils } from "../../utils/url-utils";
+import { ValidationUtils } from "../../utils/validation-utils";
 
 export class OrdersEdit {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
-        const id = new URLSearchParams(location.search).get('id');
+        const id = UrlUtils.getUrlParam('id');
         if (!id) return openNewRoute('/');
         this.breadcrumbEl = document.getElementById('breadcrumbs-order');
         this.descriptionEl = document.getElementById('descriptionInput');
@@ -48,39 +50,20 @@ export class OrdersEdit {
         const scheduledEl = $('#calendar-scheduled');
         const completeEl = $('#calendar-complete');
         const deadlineEl = $('#calendar-deadline');
-        scheduledEl.datetimepicker({
+        const calendarOptions = {
             inline: true,
             locale: 'ru',
             icons: {
                 time: 'far fa-clock'
             },
-            date: order.scheduledDate,
             useCurrent: false
-        });
+        };
+        scheduledEl.datetimepicker(Object.assign({}, calendarOptions, { date: order.scheduledDate }));
         scheduledEl.on("change.datetimepicker", (e) => { this.scheduledDate = e.date });
-        completeEl.datetimepicker({
-            inline: true,
-            locale: 'ru',
-            icons: {
-                time: 'far fa-clock'
-            },
-            buttons: {
-                showClear: true
-            },
-            date: order.completeDate,
-            useCurrent: false
-        });
+        deadlineEl.datetimepicker(Object.assign({}, calendarOptions, { date: order.deadlineDate }));
+        deadlineEl.on("change.datetimepicker", (e) => { this.deadlineDate = e.date });        
+        completeEl.datetimepicker(Object.assign({}, calendarOptions, { date: order.completeDate, buttons: { showClear: true } }));
         completeEl.on("change.datetimepicker", (e) => { this.completeDate = e.date });
-        deadlineEl.datetimepicker({
-            inline: true,
-            locale: 'ru',
-            icons: {
-                time: 'far fa-clock'
-            },
-            date: order.deadlineDate,
-            useCurrent: false
-        });
-        deadlineEl.on("change.datetimepicker", (e) => { this.deadlineDate = e.date });
     };
     async getFreelancers(currentFreelancerId) {
         const result = await HttpUtils.request('/freelancers');
@@ -104,22 +87,12 @@ export class OrdersEdit {
             theme: 'bootstrap4'
         });
     };
-    validateForm() {
-        let isValid = true;
-        const textInputEl = [this.amountEl, this.descriptionEl];
-        for (let i = 0; i < textInputEl.length; i++) {
-            if (textInputEl[i].value) {
-                textInputEl[i].classList.remove('is-invalid');
-            } else {
-                textInputEl[i].classList.add('is-invalid');
-                isValid = false;
-            };
-        };
-        return isValid;
-    };
     async updateOrder(e) {
         e.preventDefault();
-        if (this.validateForm()) {
+        if (ValidationUtils.validateForm([
+            { element: this.amountEl },
+            { element: this.descriptionEl }
+        ])) {
             const changedData = {};
             if (+this.amountEl.value !== +this.originalData.amount) changedData.amount = +this.amountEl.value;
             if (this.descriptionEl.value !== this.originalData.description) changedData.description = this.descriptionEl.value;

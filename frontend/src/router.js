@@ -20,7 +20,7 @@ export class Router {
         this.titlePageEl = document.getElementById('title');
         this.contentPageEl = document.getElementById('content');
         this.adminlteStyleEl = document.getElementById('adminlte_style');
-        this.userName = JSON.parse(AuthUtils.getAuthInfo().userInfo).name;
+        this.userName = JSON.parse(AuthUtils.getAuthInfo().userInfo)?.name;
         this.openNewRoute = async (url) => {
             const currentRoute = location.pathname;
             history.pushState({}, '', url);

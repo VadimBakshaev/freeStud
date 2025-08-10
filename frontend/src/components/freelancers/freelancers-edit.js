@@ -2,15 +2,14 @@ import config from "../../config/config";
 import { CommonUtils } from "../../utils/common-utils";
 import { FileUtils } from "../../utils/file-utils";
 import { HttpUtils } from "../../utils/http-utils";
+import { UrlUtils } from "../../utils/url-utils";
 import { ValidationUtils } from "../../utils/validation-utils";
 
 export class FreelancersEdit {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
-        const id = new URLSearchParams(location.search).get('id');
-        if (!id) {
-            return openNewRoute('/');
-        };
+        const id = UrlUtils.getUrlParam('id');
+        if (!id) return openNewRoute('/');        
         this.breadcrumbEl = document.getElementById('breadcrumbs-freelancer');
         this.nameEl = document.getElementById('nameInput');
         this.lastNameEl = document.getElementById('lastNameInput');
@@ -59,18 +58,17 @@ export class FreelancersEdit {
             };
         };
     };
-    validateForm() {
-        let isValid = true;
-        const textInputEl = [this.nameEl, this.lastNameEl, this.educationEl, this.locationEl, this.skillsEl, this.infoEl];
-        for (let i = 0; i < textInputEl.length; i++) {
-            if (!ValidationUtils.validateField(textInputEl[i])) isValid = false;            
-        };
-        if (!ValidationUtils.validateField(this.emailEl, {pattern:/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/})) isValid = false; 
-        return isValid;
-    };
     async updateFreelancer(e) {
         e.preventDefault();
-        if (this.validateForm()) {
+        if (ValidationUtils.validateForm([
+            { element: this.nameEl },
+            { element: this.lastNameEl },
+            { element: this.educationEl },
+            { element: this.locationEl },
+            { element: this.skillsEl },
+            { element: this.infoEl },
+            { element: this.emailEl, options: { pattern: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ } }
+        ])) {
             const changedData = {};
             if (this.nameEl.value !== this.originalData.name) changedData.name = this.nameEl.value;
             if (this.lastNameEl.value !== this.originalData.lastName) changedData.lastName = this.lastNameEl.value;

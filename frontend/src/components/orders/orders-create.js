@@ -1,11 +1,12 @@
 import { HttpUtils } from "../../utils/http-utils";
+import { ValidationUtils } from "../../utils/validation-utils";
 
 export class OrdersCreate {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
         this.descriptionEl = document.getElementById('descriptionInput');
         this.amountEl = document.getElementById('amountInput');
-        this.statusEl=document.getElementById('statusSelect');
+        this.statusEl = document.getElementById('statusSelect');
         this.freelancerSelectEl = document.getElementById('freelancerSelect');
         this.scheduledCardEl = document.getElementById('scheduled');
         this.deadlineCardEl = document.getElementById('deadline');
@@ -15,36 +16,21 @@ export class OrdersCreate {
         const scheduledEl = $('#calendar-scheduled');
         const completeEl = $('#calendar-complete');
         const deadlineEl = $('#calendar-deadline');
-        scheduledEl.datetimepicker({
+        const calendarOptions = {
             inline: true,
             locale: 'ru',
             icons: {
                 time: 'far fa-clock'
             },
             useCurrent: false
-        });
+        }
+        scheduledEl.datetimepicker(calendarOptions);
         scheduledEl.on("change.datetimepicker", (e) => { this.scheduledDate = e.date });
-        completeEl.datetimepicker({
-            inline: true,
-            locale: 'ru',
-            icons: {
-                time: 'far fa-clock'
-            },
-            buttons: {
-                showClear: true
-            },
-            useCurrent: false
-        });
-        completeEl.on("change.datetimepicker", (e) => { this.completeDate = e.date });
-        deadlineEl.datetimepicker({
-            inline: true,
-            locale: 'ru',
-            icons: {
-                time: 'far fa-clock'
-            },
-            useCurrent: false
-        });
+        deadlineEl.datetimepicker(calendarOptions);
         deadlineEl.on("change.datetimepicker", (e) => { this.deadlineDate = e.date });
+        calendarOptions.buttons = { showClear: true };
+        completeEl.datetimepicker(calendarOptions);
+        completeEl.on("change.datetimepicker", (e) => { this.completeDate = e.date });
         document.getElementById('saveButton').addEventListener('click', this.saveOrder.bind(this));
         this.getFreelancers();
     };
@@ -71,7 +57,12 @@ export class OrdersCreate {
     };
     async saveOrder(e) {
         e.preventDefault();
-        if (this.validateForm()) {
+        if (ValidationUtils.validateForm([
+            { element: this.amountEl },
+            { element: this.descriptionEl },
+            { element: this.scheduledCardEl, options: { check: this.scheduledDate } },
+            { element: this.deadlineCardEl, options: { check: this.deadlineDate } },
+        ])) {
             const result = await HttpUtils.request('/orders', 'POST', true, {
                 description: this.descriptionEl.value,
                 deadlineDate: this.deadlineDate.toISOString(),
@@ -92,30 +83,5 @@ export class OrdersCreate {
             };
             return this.openNewRoute('/orders/view?id=' + result.response.id);
         };
-    };
-    validateForm() {
-        let isValid = true;
-        const textInputEl = [this.amountEl, this.descriptionEl];
-        for (let i = 0; i < textInputEl.length; i++) {
-            if (textInputEl[i].value) {
-                textInputEl[i].classList.remove('is-invalid');
-            } else {
-                textInputEl[i].classList.add('is-invalid');
-                isValid = false;
-            };
-        };
-        if (this.scheduledDate) {
-            this.scheduledCardEl.classList.remove('is-invalid');
-        } else {
-            this.scheduledCardEl.classList.add('is-invalid');
-            isValid = false;
-        };
-        if (this.deadlineDate) {
-            this.deadlineCardEl.classList.remove('is-invalid');
-        } else {
-            this.deadlineCardEl.classList.add('is-invalid');
-            isValid = false;
-        };
-        return isValid;
     };
 }

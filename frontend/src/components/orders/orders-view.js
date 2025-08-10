@@ -1,14 +1,13 @@
 import config from "../../config/config";
 import { CommonUtils } from "../../utils/common-utils";
 import { HttpUtils } from "../../utils/http-utils";
+import { UrlUtils } from "../../utils/url-utils";
 
 export class OrdersView {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
-        const id = new URLSearchParams(location.search).get('id');
-        if (!id) {
-            return openNewRoute('/');
-        };
+        const id = UrlUtils.getUrlParam('id');
+        if (!id) return openNewRoute('/');        
         document.getElementById('edit-link').href = '/orders/edit?id=' + id;
         document.getElementById('delete-link').href = '/orders/delete?id=' + id;
         this.getOrder(id);
