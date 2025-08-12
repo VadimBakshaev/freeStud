@@ -1,5 +1,5 @@
 import config from "../../config/config";
-import { FreelancersService } from "../../services/freelancers-service";
+//import { FreelancersService } from "../../services/freelancers-service";
 import { CommonUtils } from "../../utils/common-utils";
 import { HttpUtils } from "../../utils/http-utils";
 
@@ -8,8 +8,8 @@ export class FreelancersList {
         this.openNewRoute = openNewRoute;
         this.recordsEl = document.getElementById('records');
 
-        this.showRecords();
-        //this.getFreelancers();
+        //this.showRecords();
+        this.getFreelancers();
     };
     async getFreelancers() {
         const result = await HttpUtils.request('/freelancers');
@@ -24,10 +24,10 @@ export class FreelancersList {
         };
         this.showRecords(result.response.freelancers)
     };
-    async showRecords() {
-        const freelancers = await FreelancersService.getFreelancers();
-        if (!freelancers) return null;
-        if (typeof (freelancers) === 'string') return this.openNewRoute(freelancers);
+    showRecords(freelancers) {
+        // const freelancers = await FreelancersService.getFreelancers();
+        // if (!freelancers) return null;
+        // if (typeof (freelancers) === 'string') return this.openNewRoute(freelancers);
         for (let i = 0; i < freelancers.length; i++) {
             const trEl = document.createElement('tr');
             trEl.insertCell().innerText = i + 1;

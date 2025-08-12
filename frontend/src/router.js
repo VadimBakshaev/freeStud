@@ -19,8 +19,7 @@ export class Router {
     constructor() {
         this.titlePageEl = document.getElementById('title');
         this.contentPageEl = document.getElementById('content');
-        this.adminlteStyleEl = document.getElementById('adminlte_style');
-        this.userName = JSON.parse(AuthUtils.getAuthInfo().userInfo)?.name;
+        this.adminlteStyleEl = document.getElementById('adminlte_style');        
         this.openNewRoute = async (url) => {
             const currentRoute = location.pathname;
             history.pushState({}, '', url);
@@ -213,8 +212,7 @@ export class Router {
                 }
             }
         ];
-    };
-
+    };    
     initEvents() {
         window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this));
         window.addEventListener('popstate', this.activateRoute.bind(this));
@@ -278,7 +276,8 @@ export class Router {
                     await this.#constructTemplate(this.contentPageEl, newRoute.useLayout);
                     await this.#constructTemplate(document.querySelector('.content-wrapper'), newRoute.filePathTemplate);
                     document.body.classList.add('sidebar-mini', 'layout-fixed');
-                    document.querySelector('.d-block').innerText = this.userName;                    
+                    this.userName = JSON.parse(AuthUtils.getAuthInfo().userInfo)?.name;
+                    document.querySelector('.d-block').innerText = this.userName;
                     this.activateMenuItem(newRoute);
                 } else {
                     await this.#constructTemplate(this.contentPageEl, newRoute.filePathTemplate);
@@ -305,5 +304,5 @@ export class Router {
                 item.classList.add('active');
             };
         });
-    };
+    };    
 }

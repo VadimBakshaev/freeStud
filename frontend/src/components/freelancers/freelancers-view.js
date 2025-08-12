@@ -8,10 +8,10 @@ export class FreelancersView {
         this.openNewRoute = openNewRoute;
         const id = UrlUtils.getUrlParam('id');
         if (!id) return openNewRoute('/');        
-        document.getElementById('edit-link').href = '/freelancers/edit?id=' + id;
+        document.getElementById('edit-link').href = '/freelancers/edit?id=' + id;        
         document.getElementById('delete-link').href = '/freelancers/delete?id=' + id;
         this.getFreelancer(id);
-    };
+    };    
     async getFreelancer(id) {
         const result = await HttpUtils.request('/freelancers/' + id);
         if (result.redirect) {

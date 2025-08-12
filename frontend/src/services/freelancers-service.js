@@ -1,7 +1,7 @@
 import { HttpUtils } from "../utils/http-utils";
 
-export class FreelancersService{
-    static async getFreelancers(){
+export class FreelancersService {
+    static async getFreelancers() {
         const result = await HttpUtils.request('/freelancers');
         if (result.redirect) {
             return result.redirect;
